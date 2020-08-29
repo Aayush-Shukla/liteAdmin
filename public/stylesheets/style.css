@@ -22,7 +22,9 @@ table {
 
 
 input[type=text], select {
-  width: 100%;
+  width: 60%;
+  position: relative;
+  left:20%;
   padding: 12px 20px;
   margin: 8px 0;
   display: inline-block;
@@ -32,7 +34,6 @@ input[type=text], select {
 }
 
 form{
-
   margin-top: 1in;
 }
 
@@ -63,4 +64,9 @@ button{
   border: none;
   border-radius: 4px;
   cursor: pointer;
+}
+.pages{
+  position:relative;
+  left:48%;
+  margin-top: 0.5in;
 }

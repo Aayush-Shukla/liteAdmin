@@ -6,6 +6,7 @@ var db_config = {
   password :  'ayush'
 }
 
+
 var connection
 	connection = mysql.createConnection(db_config)
 	connection.connect(function(err) {
@@ -14,5 +15,5 @@ var connection
 		}
 	});
 
-
+module.exports.config=db_config
 module.exports = connection

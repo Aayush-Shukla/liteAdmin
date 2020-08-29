@@ -1,0 +1,43 @@
+<link rel='stylesheet' href='/stylesheets/style.css' />
+
+<table>
+    <tr>
+        <% Object.keys(struct[0]).forEach(function(key) { %>
+            <th><%= key %></th>
+        <%})%>
+    </tr>
+
+
+
+    <% for (var i =0; i < struct.length;  i++ ) { %>
+
+        <tr>
+            <% Object.values(struct[i]).forEach(function(val) { %>
+                <td><%= val %></td>
+            <%})%>
+
+
+        </tr>
+    <%}%>
+
+
+
+
+
+
+</table>
+
+
+<form method="post">
+    
+    <% for (var i=0;i<field.length;i++) { %>
+    <label for=<%=field[i]%>><%=field[i]%></label>
+    <br>
+    <input type="text" id=<%=field[i]%> name=<%=field[i]%>  required>
+    <br>
+    <br>
+    <% } %>
+
+    <input type="submit">
+    
+</form>

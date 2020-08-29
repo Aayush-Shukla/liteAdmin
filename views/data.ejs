@@ -31,6 +31,7 @@
 <form id=" search" method="post">
     <label for="search"></label>
     <input type="text" id="search" name="search" placeholder="SEARCH">
+    <br>
     <input type="submit" value="search">
 </form>
 
@@ -63,5 +64,5 @@
 
 </table>
 
-<div><a href=<%=prev%>>prev</a>  <a href=<%=next%>>next</a></div>
-<button> New Entry</button>
+<div class="pages"><a href=<%=prev%>>prev</a> <%=page%> <a href=<%=next%>>next</a></div>
+<a href="new/add"><button> New Entry</button></a>

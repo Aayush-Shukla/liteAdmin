@@ -7,5 +7,12 @@
   <body>
     <h1><%= title %></h1>
     <p>Welcome to <%= title %></p>
+
+    <% for (var i =0; i < title.length;  i++ ) { %>
+      <ol>
+        <a href="/database/<%=  title[i] %>"><%= title[i] %></a>
+      </ol>
+      <%#  will output the numbers 1-10 %>
+    <% } %>
   </body>
 </html>

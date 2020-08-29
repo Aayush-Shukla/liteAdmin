@@ -23,6 +23,119 @@ router.get('/',function (req, res) {
 
 })
 
+router.get('/database/:db/:name/edit/:pk',function (req, res) {
+
+  var dbname = req.params.db
+  var tablename = req.params.name
+  var pk=req.params.pk
+
+  var primary = 0
+  console.log("into")
+
+  if (!dbname || !tablename) {
+    console.log(res, "Database/ Table not selected")
+  }
+
+  var sql = "SHOW COLUMNS IN " + tablename + " IN " + dbname
+
+  mysql.query(sql, [], function (err, result) {
+
+    if (err) {
+      console.log(res, err.toString(), err)
+    }
+    //
+    // var tables = []
+    //
+    // for (var i = 0; i < result.length; i++) {
+    //   tables.push(result[i]["Tables_in_" + dbname])
+    // }
+    structure = []
+    for (var i = 0; i < result.length; i++) {
+      structure.push(JSON.parse(JSON.stringify(result[i])))
+    }
+    for (var i = 0; i < structure.length; i++) {
+      console.log(structure[i].Key == 'PRI')
+      if (structure[i].Key == 'PRI') {
+        primary = structure[i].Field
+
+      }
+    }
+    sql = "SELECT * FROM " + dbname + "." + tablename + " where " + primary + " = " + pk;
+    mysql.query(sql, [], function (err, result) {
+
+      if (err) {
+        console.log(res, err.toString(), err)
+      }
+      console.log(JSON.parse(JSON.stringify(result))[0].city)
+
+      res.render('edit',{struct:structure, data:JSON.parse(JSON.stringify(result))})
+
+    })
+
+
+  })
+})
+router.post('/database/:db/:name/edit/:pk',function (req, res) {
+  var string = ''
+  var dbname = req.params.db
+  var tablename = req.params.name
+  var pk = req.params.pk
+
+  var sql = "SHOW COLUMNS IN " + tablename + " IN " + dbname
+
+  mysql.query(sql, [], function (err, result) {
+
+    if (err) {
+      console.log(res, err.toString(), err)
+    }
+    //
+    // var tables = []
+    //
+    // for (var i = 0; i < result.length; i++) {
+    //   tables.push(result[i]["Tables_in_" + dbname])
+    // }
+    structure = []
+    for (var i = 0; i < result.length; i++) {
+      structure.push(JSON.parse(JSON.stringify(result[i])))
+    }
+    for (var i = 0; i < structure.length; i++) {
+      console.log(structure[i].Key == 'PRI')
+      if (structure[i].Key == 'PRI') {
+        primary = structure[i].Field
+
+      }
+    }
+
+
+    var sql = "UPDATE "+ dbname + "." + tablename + " SET "
+
+    console.log(JSON.parse(JSON.stringify(req.body)).city)
+    Object.keys(JSON.parse(JSON.stringify(req.body))).forEach(function (key) {
+      if (eval("req.body." + key) != '') {
+        sql += key + "= \"" + eval("JSON.parse(JSON.stringify(req.body))." + key) + "\","
+        console.log(key, eval("JSON.parse(JSON.stringify(req.body))." + key))
+      }
+    })
+    sql=sql.slice(0, -1);
+    // console.log(sql,"===")
+    sql += " WHERE "+ primary +"="+ pk
+    console.log(sql)
+
+    mysql.query(sql, [], function (err, result) {
+
+      if (err) {
+        console.log(res, err.toString(), err)
+      }
+      console.log(sql[sql.length-1]
+      )
+
+      res.redirect("/")
+
+    })
+
+  })
+})
+
 
 
 router.get('/database/:name',function (req, res) {
@@ -59,6 +172,8 @@ router.get('/database/:db/:name/:page',function (req, res) {
   var tablename = req.params.name
   var page = req.params.page
   var limit =15
+  var primary=0
+  var pri=[]
   if(!dbname || !tablename) {
     console.log(res, "Database/ Table not selected")
   }
@@ -80,7 +195,15 @@ router.get('/database/:db/:name/:page',function (req, res) {
     for (var i=0;i<result.length;i++) {
       structure.push(JSON.parse(JSON.stringify(result[i])))
     }
-    console.log(structure[0].Key)
+    for (var i=0;i<structure.length;i++) {
+      console.log(structure[i].Key=='PRI')
+      if(structure[i].Key=='PRI'){
+        primary=structure[i].Field
+
+      }
+    }
+
+
 
 
     var sql = "SELECT * FROM " + dbname +"."+ tablename + " LIMIT " + limit + " OFFSET " + ((page-1) * limit)
@@ -98,8 +221,14 @@ router.get('/database/:db/:name/:page',function (req, res) {
       for (var i=0;i<rows.length;i++) {
         rowData.push(JSON.parse(JSON.stringify(rows[i])))
       }
-      console.log(structure,rowData)
-      res.render('data', { struct: structure,rows: rowData});
+      console.log(primary)
+      for (var i=0;i<rows.length;i++) {
+        // console.log(eval(rowData[i]+"."+primary))
+        // console.log(eval("rowData[i]."+primary))
+        pri.push(eval("rowData[i]."+primary))
+
+      }
+      res.render('data', { struct: structure,rows: rowData, pri:pri, db:dbname,table:tablename});
 
 
     })

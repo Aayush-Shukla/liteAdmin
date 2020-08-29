@@ -36,17 +36,18 @@
         <% Object.keys(rowData[0]).forEach(function(key) { %>
             <th><%= key %></th>
         <%})%>
+        <th>EDIT</th>
     </tr>
 
 
 
         <% for (var i =0; i < rowData.length;  i++ ) { %>
 
-    <tr>
+    <tr id=<%=pri%>>
         <% Object.values(rowData[i]).forEach(function(val) { %>
             <td><%= val %></td>
         <%})%>
-
+    <td><a href='edit/<%=pri[i]%>' >EDIT</a> </td>
 
     </tr>
     <%}%>

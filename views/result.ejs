@@ -9,15 +9,15 @@
 
 
 
-        <% for (var i =0; i < struct.length;  i++ ) { %>
+    <% for (var i =0; i < struct.length;  i++ ) { %>
 
-    <tr>
-        <% Object.values(struct[i]).forEach(function(val) { %>
-            <td><%= val %></td>
-        <%})%>
+        <tr>
+            <% Object.values(struct[i]).forEach(function(val) { %>
+                <td><%= val %></td>
+            <%})%>
 
 
-    </tr>
+        </tr>
     <%}%>
 
 
@@ -40,18 +40,18 @@
         <% Object.keys(rowData[0]).forEach(function(key) { %>
             <th><%= key %></th>
         <%})%>
-        <th> </th>
+
     </tr>
 
 
 
-        <% for (var i =0; i < rowData.length;  i++ ) { %>
+    <% for (var i =0; i < rowData.length;  i++ ) { %>
 
-    <tr id=<%=pri%>>
+    <tr>
         <% Object.values(rowData[i]).forEach(function(val) { %>
             <td><%= val %></td>
         <%})%>
-    <td><a href='edit/<%=pri[i]%>' >EDIT</a> <a href='del/<%=pri[i]%>' >DEL</a> </td>
+
 
     </tr>
     <%}%>
@@ -63,5 +63,3 @@
 
 </table>
 
-<div><a href=<%=prev%>>prev</a>  <a href=<%=next%>>next</a></div>
-<button> New Entry</button>

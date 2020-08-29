@@ -171,6 +171,7 @@ router.get('/database/:db/:name/:page',function (req, res) {
   var dbname = req.params.db
   var tablename = req.params.name
   var page = req.params.page
+  page=parseInt(page)
   var limit =15
   var primary=0
   var pri=[]
@@ -221,14 +222,87 @@ router.get('/database/:db/:name/:page',function (req, res) {
       for (var i=0;i<rows.length;i++) {
         rowData.push(JSON.parse(JSON.stringify(rows[i])))
       }
-      console.log(primary)
+      console.log(structure)
       for (var i=0;i<rows.length;i++) {
         // console.log(eval(rowData[i]+"."+primary))
         // console.log(eval("rowData[i]."+primary))
         pri.push(eval("rowData[i]."+primary))
 
       }
-      res.render('data', { struct: structure,rows: rowData, pri:pri, db:dbname,table:tablename});
+      res.render('data', { struct: structure,rows: rowData, pri:pri, db:dbname,table:tablename, prev:page-1, next:page+1});
+
+
+    })
+
+  })
+
+})
+router.post('/database/:db/:name/:page',function (req, res) {
+  var search= req.body.search
+  var dbname = req.params.db
+  var tablename = req.params.name
+  var page = req.params.page
+  page=parseInt(page)
+
+  if(!dbname || !tablename) {
+    console.log(res, "Database/ Table not selected")
+  }
+
+  var sql = "SHOW COLUMNS IN "+ tablename+ " IN " + dbname
+
+  mysql.query(sql, [], function (err, result) {
+
+    if(err) {
+      console.log(res, err.toString(), err)
+    }
+    //
+    // var tables = []
+    //
+    // for (var i = 0; i < result.length; i++) {
+    //   tables.push(result[i]["Tables_in_" + dbname])
+    // }
+    structure=[]
+    for (var i=0;i<result.length;i++) {
+      structure.push(JSON.parse(JSON.stringify(result[i])))
+    }
+    sql="SELECT * FROM " + dbname +"."+ tablename +  " WHERE "
+    // name LIKE '%$search%'
+    // OR foo LIKE '%$search%'
+    // OR bar LIKE '%$search%'
+    // OR baz LIKE '%$search%'
+    for (var i=0;i<structure.length;i++) {
+      // console.log(structure[i].Key=='PRI')
+      sql+=structure[i].Field +" LIKE "+"\"%"+ search+ "%\"" + " OR "
+
+      }
+
+  sql=sql.slice(0,-3)
+    console.log(sql)
+
+
+
+
+    // var sql = "SELECT * FROM " + dbname +"."+ tablename + " LIMIT " + limit + " OFFSET " + ((page-1) * limit)
+
+
+    mysql.query(sql, [], function (err, rows) {
+
+      if (err) {
+        console.log(res, err.toString(), err)
+      }
+
+      // console.log(rows)
+      rowData=[]
+
+      for (var i=0;i<rows.length;i++) {
+        rowData.push(JSON.parse(JSON.stringify(rows[i])))
+      }
+      // console.log(primary)
+
+
+
+      console.log(rows)
+      res.render('result', { struct: structure,rows: rowData, db:dbname,table:tablename});
 
 
     })

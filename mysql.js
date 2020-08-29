@@ -6,6 +6,13 @@ var db_config = {
   password :  'ayush'
 }
 
+var config =function (a,b,c){
+	db_config.host=a
+	db_config.user=b
+	db_config.password=c
+
+
+}
 
 var connection
 	connection = mysql.createConnection(db_config)
@@ -15,5 +22,6 @@ var connection
 		}
 	});
 
-module.exports.config=db_config
+// module.exports.config=config
 module.exports = connection
+module.exports = config

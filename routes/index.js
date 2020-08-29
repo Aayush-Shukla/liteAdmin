@@ -1,27 +1,68 @@
 var express = require('express');
 var router = express.Router();
-var mysql = require('../mysql')
+// var mysql = require('../mysql')
+// var config=mysql.config
+
+
+
+var mysql      = require('mysql')
+
+var db_config = {
+  host     : '',
+  user     : '',
+  password :  ''
+}
+
+function config (a,b,c){
+  // sessionStorage.setItem("host", a)
+  // sessionStorage.setItem("user", b)
+  // sessionStorage.setItem("password", c)
+  db_config.host=a
+  db_config.user=b
+  db_config.password=c
+
+
+}
+
+var connection
+connection = mysql.createConnection(db_config)
+connection.connect(function(err) {
+  if(err) {
+    console.log('Database connection error:', err);
+  }
+});
+
+
+var mysql=connection
+
+
 
 
 
 /* GET home page. */
-router.get('/',function (req, res) {
 
-  console.log(mysql.config.user)
-
-
-  res.render('login');
-})
 
 router.post('/',function (req, res) {
   console.log("in")
-  mysql.config.host=req.body.host
-  mysql.config.user=req.body.user
-  mysql.config.password=req.body.password
-  console.log(mysql.config.user)
+  // console.log(mysql.config)
+  config(req.body.host,req.body.user,req.body.password)
+  db_config.host="sdasd"
+
+
+  console.log(db_config)
 
 
   res.redirect('/database');
+})
+
+
+router.get('/',function (req, res) {
+  console.log(db_config)
+
+  // console.log(mysql.config.user)
+
+
+  res.render('login');
 })
 
 
